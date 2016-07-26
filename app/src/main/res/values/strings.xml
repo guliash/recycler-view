@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Yamblz</string>
     <string name="content">Hello</string>
+    <string name="decoration">Decoration</string>
+    <string name="decorate">Decorate</string>
+    <string name="do_not_decorate">Do not decorate</string>
 </resources>

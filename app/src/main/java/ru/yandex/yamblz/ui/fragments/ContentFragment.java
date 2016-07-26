@@ -1,24 +1,31 @@
 package ru.yandex.yamblz.ui.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioGroup;
 
 import butterknife.BindView;
 import ru.yandex.yamblz.R;
 import ru.yandex.yamblz.ui.adapters.ContentAdapter;
+import ru.yandex.yamblz.ui.adapters.StrokeItemDecoration;
 import ru.yandex.yamblz.ui.adapters.ItemTouchHelperCallback;
 
 public class ContentFragment extends BaseFragment {
 
     @BindView(R.id.rv)
     RecyclerView rv;
+
+    @BindView(R.id.decor_group)
+    RadioGroup decorGroup;
+
 
     @NonNull
     @Override
@@ -36,7 +43,19 @@ public class ContentFragment extends BaseFragment {
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(rv);
 
-        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        rv.setLayoutManager(new GridLayoutManager(getContext(), 3));
         rv.setAdapter(contentAdapter);
+        StrokeItemDecoration strokeItemDecoration = new StrokeItemDecoration(10, Color.GRAY);
+        decorGroup.setOnCheckedChangeListener((RadioGroup group, int checkedId) -> {
+            switch (checkedId) {
+                case R.id.decorate:
+                    rv.addItemDecoration(strokeItemDecoration);
+                    break;
+                case R.id.do_not_decorate:
+                    rv.removeItemDecoration(strokeItemDecoration);
+                    break;
+            }
+        });
+
     }
 }

@@ -24,8 +24,7 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        return makeMovementFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
-                ItemTouchHelper.START | ItemTouchHelper.END);
+        return makeMovementFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.END);
     }
 
     @Override
@@ -59,16 +58,11 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
         final View view = viewHolder.itemView;
         final float left = view.getLeft();
         final float top = view.getTop();
-        final float width = view.getWidth();
         final float height = view.getHeight();
-
-        mPaint.setColor((int)mEvaluator.evaluate(Math.min(Math.abs(dX / width), 1f), Color.WHITE, Color.RED));
-
+        final float swipeDistance = getSwipeThreshold(viewHolder) * recyclerView.getWidth();
+        mPaint.setColor((int)mEvaluator.evaluate(Math.min(dX / swipeDistance, 1f),
+                Color.WHITE, Color.RED));
         //change color from white to red on swipe
-        if(dX >= 0) {
-            c.drawRect(left, top, left + dX, top + height, mPaint);
-        } else {
-            c.drawRect(left + width + dX, top , left + width, top + height, mPaint);
-        }
+        c.drawRect(left, top, left + dX, top + height, mPaint);
     }
 }
