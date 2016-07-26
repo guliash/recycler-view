@@ -1,14 +1,25 @@
 package ru.yandex.yamblz.ui.adapters;
 
+import android.animation.ArgbEvaluator;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
+import android.view.View;
 
 public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
+
     private ItemTouchHelperAdapter mAdapter;
+    private ArgbEvaluator mEvaluator;
+    private Paint mPaint;
 
     public ItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
         this.mAdapter = adapter;
+        this.mEvaluator = new ArgbEvaluator();
+        this.mPaint = new Paint();
     }
 
     @Override
@@ -36,5 +47,28 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public boolean isLongPressDragEnabled() {
         return true;
+    }
+
+    @Override
+    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        if(actionState != ItemTouchHelper.ACTION_STATE_SWIPE) {
+            return;
+        }
+
+        final View view = viewHolder.itemView;
+        final float left = view.getLeft();
+        final float top = view.getTop();
+        final float width = view.getWidth();
+        final float height = view.getHeight();
+
+        mPaint.setColor((int)mEvaluator.evaluate(Math.min(Math.abs(dX / width), 1f), Color.WHITE, Color.RED));
+
+        //change color from white to red on swipe
+        if(dX >= 0) {
+            c.drawRect(left, top, left + dX, top + height, mPaint);
+        } else {
+            c.drawRect(left + width + dX, top , left + width, top + height, mPaint);
+        }
     }
 }
