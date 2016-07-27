@@ -44,8 +44,9 @@ public class StrokeItemDecoration extends RecyclerView.ItemDecoration {
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
         final int childCount = parent.getChildCount();
         for(int i = 0; i < childCount; i++) {
-            if(isItemDecorated(i)) {
-                drawStrokeForChild(c, parent.getChildAt(i));
+            final View child = parent.getChildAt(i);
+            if(isItemDecorated(parent.getChildAdapterPosition(child))) {
+                drawStrokeForChild(c, child);
             }
         }
     }

@@ -4,4 +4,7 @@
     <string name="decoration">Decoration</string>
     <string name="decorate">Decorate</string>
     <string name="do_not_decorate">Do not decorate</string>
+    <string name="columns">Columns</string>
+    <string name="save">Save</string>
+    <string name="natural_warning">Should be natural</string>
 </resources>
