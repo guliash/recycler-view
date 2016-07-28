@@ -7,13 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.Switch;
 
 import butterknife.BindView;
@@ -21,8 +18,8 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import ru.yandex.yamblz.R;
 import ru.yandex.yamblz.ui.adapters.ContentAdapter;
-import ru.yandex.yamblz.ui.adapters.StrokeItemDecoration;
 import ru.yandex.yamblz.ui.adapters.ItemTouchHelperCallback;
+import ru.yandex.yamblz.ui.adapters.StrokeItemDecoration;
 
 public class ContentFragment extends BaseFragment {
 

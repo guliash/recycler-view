@@ -11,10 +11,11 @@ import android.view.View;
 
 public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
-
     private ItemTouchHelperAdapter mAdapter;
     private ArgbEvaluator mEvaluator;
     private Paint mPaint;
+    private boolean mDragging;
+    private int mDraggedFrom, mDraggedTo;
 
     public ItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
         this.mAdapter = adapter;
@@ -30,8 +31,32 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+        Log.e("ON MOVE" , viewHolder.getAdapterPosition() + " " + target.getAdapterPosition());
+        mDraggedTo = target.getAdapterPosition();
         mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
         return true;
+    }
+
+    @Override
+    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+        super.onSelectedChanged(viewHolder, actionState);
+        if(actionState == ItemTouchHelper.ACTION_STATE_DRAG && !mDragging) {
+            mDragging = true;
+            mAdapter.onItemsStartMove();
+            mDraggedFrom = viewHolder.getAdapterPosition();
+            mDraggedTo = mDraggedFrom;
+        }
+        if(actionState == ItemTouchHelper.ACTION_STATE_IDLE && mDragging) {
+            mDragging = false;
+            notifyFinalMove();
+        }
+        Log.e("TAG", "ON SELECTED CHANGED " + actionState);
+    }
+
+    private void notifyFinalMove() {
+        if(mDraggedFrom != mDraggedTo) {
+            mAdapter.onItemsFinalMove(mDraggedFrom, mDraggedTo);
+        }
     }
 
     @Override
@@ -55,7 +80,6 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
         if(actionState != ItemTouchHelper.ACTION_STATE_SWIPE) {
             return;
         }
-
         final View view = viewHolder.itemView;
         final float left = view.getLeft();
         final float top = view.getTop();
