@@ -18,6 +18,7 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import ru.yandex.yamblz.R;
 import ru.yandex.yamblz.ui.adapters.ContentAdapter;
+import ru.yandex.yamblz.ui.adapters.CustomItemAnimator;
 import ru.yandex.yamblz.ui.adapters.ItemTouchHelperCallback;
 import ru.yandex.yamblz.ui.adapters.StrokeItemDecoration;
 
@@ -52,6 +53,7 @@ public class ContentFragment extends BaseFragment {
 
         rv.setLayoutManager(new GridLayoutManager(getContext(), 3));
         rv.setAdapter(contentAdapter);
+        rv.setItemAnimator(new CustomItemAnimator());
         mStrokeDecoration = new StrokeItemDecoration(10, Color.GRAY);
 
     }

@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +38,8 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
         holder.itemView.setOnClickListener((View view) -> {
             int adapterPos = holder.getAdapterPosition();
             if (adapterPos != RecyclerView.NO_POSITION) {
-                holder.changeBG(randomColor());
+                colors.set(adapterPos, randomColor());
+                notifyItemChanged(adapterPos);
             }
         });
         return holder;
@@ -44,15 +47,8 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
 
     @Override
     public void onBindViewHolder(ContentHolder holder, int position) {
-        Log.e("TAG", "BIND " + position + "");
-        if (position == mMovedFinalFrom || position == mMovedFinalTo) {
-            holder.highlight(Color.YELLOW);
-            holder.bind(createColorForPosition(position));
-        } else {
-            Integer color = createColorForPosition(position);
-            holder.highlight(color);
-            holder.bind(color);
-        }
+        Log.e("TAG", "ON BIND VIEW HOLDER " + position);
+        holder.bind(createColorForPosition(position));
     }
 
     @Override
@@ -93,59 +89,29 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
 
     static class ContentHolder extends RecyclerView.ViewHolder {
 
-        private ObjectAnimator mBgAnimator;
-        private ArgbEvaluator mArgbEvaluator;
-
-        private static final long ANIM_DURATION = 500;
-
         ContentHolder(View itemView) {
             super(itemView);
-
-            mBgAnimator = ObjectAnimator.ofInt(this.itemView, "backgroundColor", 0);
-            mArgbEvaluator = new ArgbEvaluator();
-            mBgAnimator.setEvaluator(mArgbEvaluator);
-
-            mBgAnimator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    bind(getBackgroundColor());
-                    itemView.setClickable(true);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
-            });
         }
 
         void bind(Integer color) {
+            setBackgroundColor(color);
             ((TextView) itemView).setText("#".concat(Integer.toHexString(color).substring(2)));
         }
 
-        void highlight(Integer color) {
+        public void setBackgroundColor(int color) {
             itemView.setBackgroundColor(color);
         }
 
-        int getBackgroundColor() {
-            return ((ColorDrawable) itemView.getBackground()).getColor();
+        public int getBackgroundColor() {
+            return ((ColorDrawable)itemView.getBackground()).getColor();
         }
 
-        void changeBG(Integer to) {
-            itemView.setClickable(false);
-            itemView.animate().rotationYBy(360).setDuration(ANIM_DURATION).start();
-            mBgAnimator.setIntValues(getBackgroundColor(), to);
-            mBgAnimator.setDuration(ANIM_DURATION).start();
+        public void setText(String text) {
+            ((TextView)itemView).setText(text);
+        }
+
+        public String getText() {
+            return ((TextView)itemView).getText().toString();
         }
     }
 }
