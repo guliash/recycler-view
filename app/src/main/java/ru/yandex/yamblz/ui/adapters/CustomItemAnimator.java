@@ -10,12 +10,17 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CustomItemAnimator extends DefaultItemAnimator {
 
     private static final long COLOR_DURATION = 1000;
+
+    Map<RecyclerView.ViewHolder, Animator> animatorsMap = new HashMap<>();
 
     @Override
     public boolean canReuseUpdatedViewHolder(RecyclerView.ViewHolder viewHolder) {
@@ -84,11 +89,20 @@ public class CustomItemAnimator extends DefaultItemAnimator {
         wholeAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
+                animatorsMap.remove(contentHolder);
                 dispatchAnimationFinished(contentHolder);
             }
         });
 
+        if(animatorsMap.containsKey(contentHolder)) {
+            animatorsMap.get(contentHolder).cancel();
+        }
+
+        animatorsMap.put(contentHolder, wholeAnimator);
+
         wholeAnimator.start();
+
+
 
         return super.animateChange(oldHolder, newHolder, preInfo, postInfo);
     }

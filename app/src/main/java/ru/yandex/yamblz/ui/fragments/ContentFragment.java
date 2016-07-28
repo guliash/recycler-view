@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
@@ -55,8 +56,9 @@ public class ContentFragment extends BaseFragment {
         rv.setLayoutManager(new GridLayoutManager(getContext(), 3));
         rv.setAdapter(contentAdapter);
         rv.setItemAnimator(new CustomItemAnimator());
+        rv.setItemViewCacheSize(120);
         rv.getRecycledViewPool().setMaxRecycledViews(0, 120);
-        mStrokeDecoration = new StrokeItemDecoration(10, Color.GRAY);
+        mStrokeDecoration = new StrokeItemDecoration(10, Color.GRAY, Color.YELLOW);
 
     }
 
@@ -95,17 +97,16 @@ public class ContentFragment extends BaseFragment {
 
     private void updateColumns(int newCount) {
         GridLayoutManager layoutManager = (GridLayoutManager)rv.getLayoutManager();
-        int oldCount = layoutManager.getSpanCount();
 
-        int last, first;
-        last = layoutManager.findLastVisibleItemPosition();
-        first = layoutManager.findFirstVisibleItemPosition();
-        int numberAtColumn = (last - first + 1) / oldCount;
+        final int oldCount = layoutManager.getSpanCount();
+        final int last = layoutManager.findLastVisibleItemPosition();
+        final int first = layoutManager.findFirstVisibleItemPosition();
+        final int numberAtColumn = (last - first + 1) / oldCount;
 
         layoutManager.setSpanCount(newCount);
-        Log.e("TAG", "NUMBER AT COLUMN " + numberAtColumn);
+
         if(newCount <= oldCount) {
-            int diff = (oldCount - newCount) * numberAtColumn;
+            final int diff = (oldCount - newCount) * numberAtColumn;
             rv.getAdapter().notifyItemRangeChanged(last - diff + 1, diff);
         } else {
             rv.getAdapter().notifyItemRangeChanged(last + 1, (newCount - oldCount) * numberAtColumn);

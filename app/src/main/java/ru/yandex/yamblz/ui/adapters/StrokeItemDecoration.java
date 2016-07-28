@@ -4,7 +4,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 public class StrokeItemDecoration extends RecyclerView.ItemDecoration {
@@ -14,17 +16,19 @@ public class StrokeItemDecoration extends RecyclerView.ItemDecoration {
 
     private int mStrokeWidth, mHalfStrokeWidth;
     private int mStrokeColor;
-    public StrokeItemDecoration(int strokeWidth, int strokeColor) {
+    private int mHighlightStrokeColor;
+
+    public StrokeItemDecoration(int strokeWidth, int strokeColor, int highlightStrokeColor) {
         this.mStrokeWidth = strokeWidth;
         this.mHalfStrokeWidth = mStrokeWidth / 2;
         this.mStrokeColor = strokeColor;
+        this.mHighlightStrokeColor = highlightStrokeColor;
 
         init();
     }
 
     private void init() {
         mPaint = new Paint();
-        mPaint.setColor(mStrokeColor);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(mStrokeWidth);
 
@@ -33,7 +37,8 @@ public class StrokeItemDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        if(isItemDecorated(parent.getChildAdapterPosition(view))) {
+        final int adapterPos = parent.getChildAdapterPosition(view);
+        if(isItemDecorated(adapterPos) || isItemHighlighted(parent.getAdapter(), adapterPos)) {
             outRect.set(mStrokeWidth, mStrokeWidth, mStrokeWidth, mStrokeWidth);
         } else {
             super.getItemOffsets(outRect, view, parent, state);
@@ -45,18 +50,22 @@ public class StrokeItemDecoration extends RecyclerView.ItemDecoration {
         final int childCount = parent.getChildCount();
         for(int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
-            if(isItemDecorated(parent.getChildAdapterPosition(child))) {
-                drawStrokeForChild(c, child);
+            final int adapterPos = parent.getChildAdapterPosition(child);
+            if(isItemHighlighted(parent.getAdapter(), adapterPos)) {
+                drawStrokeForChild(c, child, mHighlightStrokeColor);
+            } else if(isItemDecorated(adapterPos)) {
+                drawStrokeForChild(c, child, mStrokeColor);
             }
         }
     }
 
-    private void drawStrokeForChild(Canvas canvas, View child) {
+    private void drawStrokeForChild(Canvas canvas, View child, int strokeColor) {
         final float top = child.getTop();
         final float left = child.getLeft();
         final float width = child.getWidth();
         final float height = child.getHeight();
 
+        mPaint.setColor(strokeColor);
         mPath.reset();
 
         mPath.moveTo(left - mStrokeWidth, top - mHalfStrokeWidth);
@@ -75,4 +84,10 @@ public class StrokeItemDecoration extends RecyclerView.ItemDecoration {
     private boolean isItemDecorated(int adapterPos) {
         return adapterPos % 2 == 0;
     }
+
+    private boolean isItemHighlighted(RecyclerView.Adapter adapter, int adapterPos) {
+        return ((ContentAdapter)adapter).getLastMovedFromPosition() == adapterPos ||
+                ((ContentAdapter)adapter).getLastMovedToPosition() == adapterPos;
+    }
+
 }

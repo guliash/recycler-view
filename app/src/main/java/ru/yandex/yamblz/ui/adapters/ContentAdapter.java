@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +28,8 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
     private final Random rnd = new Random();
     private final List<Integer> colors = new ArrayList<>();
 
-    private int mMovedFinalFrom = -1;
-    private int mMovedFinalTo = -1;
+    private int mMovedFrom = -1;
+    private int mMovedTo = -1;
 
     @Override
     public ContentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -47,8 +48,8 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
 
     @Override
     public void onBindViewHolder(ContentHolder holder, int position) {
-        Log.e("TAG", "ON BIND VIEW HOLDER " + position);
         holder.bind(createColorForPosition(position));
+        holder.itemView.animate().rotationXBy(360).setDuration(500).start();
     }
 
     @Override
@@ -69,6 +70,8 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
 
     @Override
     public void onItemMove(int from, int to) {
+        mMovedFrom = from;
+        mMovedTo = to;
         Collections.swap(colors, from, to);
         notifyItemMoved(from, to);
     }
@@ -95,7 +98,7 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
 
         void bind(Integer color) {
             setBackgroundColor(color);
-            ((TextView) itemView).setText("#".concat(Integer.toHexString(color).substring(2)));
+            setText("#".concat(Integer.toHexString(color).substring(2)));
         }
 
         public void setBackgroundColor(int color) {
@@ -115,8 +118,11 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
         }
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+    public int getLastMovedFromPosition() {
+        return mMovedFrom;
+    }
+
+    public int getLastMovedToPosition() {
+        return mMovedTo;
     }
 }
