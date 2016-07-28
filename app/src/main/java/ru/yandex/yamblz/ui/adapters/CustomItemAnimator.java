@@ -93,6 +93,12 @@ public class CustomItemAnimator extends DefaultItemAnimator {
         return super.animateChange(oldHolder, newHolder, preInfo, postInfo);
     }
 
+    @Override
+    public boolean animateAdd(RecyclerView.ViewHolder holder) {
+        Log.e("TAG", "ANIMATE APPEARANCE " + holder.getAdapterPosition());
+        return super.animateAdd(holder);
+    }
+
     private class ColorInfo extends ItemHolderInfo {
         private int mColor;
         private String mText;

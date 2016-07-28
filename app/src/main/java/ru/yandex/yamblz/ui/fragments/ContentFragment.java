@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,7 @@ public class ContentFragment extends BaseFragment {
         rv.setLayoutManager(new GridLayoutManager(getContext(), 3));
         rv.setAdapter(contentAdapter);
         rv.setItemAnimator(new CustomItemAnimator());
+        rv.getRecycledViewPool().setMaxRecycledViews(0, 120);
         mStrokeDecoration = new StrokeItemDecoration(10, Color.GRAY);
 
     }
@@ -80,8 +82,7 @@ public class ContentFragment extends BaseFragment {
             if(cols <= 0) {
                 showNaturalWarning();
             } else {
-                ((GridLayoutManager) rv.getLayoutManager()).setSpanCount(cols);
-                rv.requestLayout();
+                updateColumns(cols);
             }
         } catch (NumberFormatException e) {
             showNaturalWarning();
@@ -90,5 +91,24 @@ public class ContentFragment extends BaseFragment {
 
     private void showNaturalWarning() {
         columns.setError(getString(R.string.natural_warning));
+    }
+
+    private void updateColumns(int newCount) {
+        GridLayoutManager layoutManager = (GridLayoutManager)rv.getLayoutManager();
+        int oldCount = layoutManager.getSpanCount();
+
+        int last, first;
+        last = layoutManager.findLastVisibleItemPosition();
+        first = layoutManager.findFirstVisibleItemPosition();
+        int numberAtColumn = (last - first + 1) / oldCount;
+
+        layoutManager.setSpanCount(newCount);
+        Log.e("TAG", "NUMBER AT COLUMN " + numberAtColumn);
+        if(newCount <= oldCount) {
+            int diff = (oldCount - newCount) * numberAtColumn;
+            rv.getAdapter().notifyItemRangeChanged(last - diff + 1, diff);
+        } else {
+            rv.getAdapter().notifyItemRangeChanged(last + 1, (newCount - oldCount) * numberAtColumn);
+        }
     }
 }

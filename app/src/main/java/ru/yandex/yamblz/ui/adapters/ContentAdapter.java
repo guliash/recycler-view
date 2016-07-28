@@ -114,4 +114,9 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
             return ((TextView)itemView).getText().toString();
         }
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
 }
