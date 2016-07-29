@@ -160,6 +160,8 @@ public class ContentFragment extends BaseFragment {
      * @param newCount the new count
      */
     private void updateColumns(int newCount) {
+        mCountOfColumns = newCount;
+
         GridLayoutManager layoutManager = (GridLayoutManager)rv.getLayoutManager();
         final int first = layoutManager.findFirstVisibleItemPosition();
 
