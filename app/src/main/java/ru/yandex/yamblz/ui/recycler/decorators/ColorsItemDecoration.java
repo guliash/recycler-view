@@ -18,6 +18,12 @@ public class ColorsItemDecoration extends RecyclerView.ItemDecoration {
     private final int mStrokeColor;
     private final int mHighlightStrokeColor;
 
+    /**
+     * Constructor
+     * @param strokeWidth stroke width
+     * @param strokeColor stroke color
+     * @param highlightStrokeColor highlight stroke color (needed when move is highlighted)
+     */
     public ColorsItemDecoration(int strokeWidth, int strokeColor, int highlightStrokeColor) {
         this.mStrokeWidth = strokeWidth;
         this.mHalfStrokeWidth = mStrokeWidth / 2;
@@ -38,7 +44,7 @@ public class ColorsItemDecoration extends RecyclerView.ItemDecoration {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         final int adapterPos = parent.getChildAdapterPosition(view);
-        if(isItemDecorated(adapterPos) || isItemHighlighted(parent.getAdapter(), adapterPos)) {
+        if(isItemDecorated(adapterPos) || isItemHighlighted((ColorsAdapter)parent.getAdapter(), adapterPos)) {
             outRect.set(mStrokeWidth, mStrokeWidth, mStrokeWidth, mStrokeWidth);
         } else {
             super.getItemOffsets(outRect, view, parent, state);
@@ -51,7 +57,7 @@ public class ColorsItemDecoration extends RecyclerView.ItemDecoration {
         for(int layoutPos = 0; layoutPos < childCount; layoutPos++) {
             final View child = parent.getChildAt(layoutPos);
             final int adapterPos = parent.getChildAdapterPosition(child);
-            if(isItemHighlighted(parent.getAdapter(), adapterPos)) {
+            if(isItemHighlighted((ColorsAdapter)parent.getAdapter(), adapterPos)) {
                 drawStrokeForChild(c, child, mHighlightStrokeColor);
             } else if(isItemDecorated(adapterPos)) {
                 drawStrokeForChild(c, child, mStrokeColor);
@@ -59,6 +65,12 @@ public class ColorsItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
+    /**
+     * Draws stroke for a child
+     * @param canvas canvas to draw at
+     * @param child the child
+     * @param strokeColor stroke color
+     */
     private void drawStrokeForChild(Canvas canvas, View child, int strokeColor) {
         final float top = child.getTop();
         final float left = child.getLeft();
@@ -81,13 +93,24 @@ public class ColorsItemDecoration extends RecyclerView.ItemDecoration {
         canvas.drawPath(mPath, mPaint);
     }
 
+    /**
+     * Checks whether item at the position should be decorated
+     * @param adapterPos adapter position of the item
+     * @return {@code true} if item decorated
+     */
     private boolean isItemDecorated(int adapterPos) {
         return adapterPos % 2 == 0;
     }
 
-    private boolean isItemHighlighted(RecyclerView.Adapter adapter, int adapterPos) {
-        return ((ColorsAdapter)adapter).getLastMovedFromPosition() == adapterPos ||
-                ((ColorsAdapter)adapter).getLastMovedToPosition() == adapterPos;
+    /**
+     * Should item be highlighted?
+     * @param colorsAdapter colors adapter to ask from
+     * @param adapterPos adapter position of item
+     * @return {@code true} if item is highlighted
+     */
+    private boolean isItemHighlighted(ColorsAdapter colorsAdapter, int adapterPos) {
+        return colorsAdapter.getLastMovedFromPosition() == adapterPos ||
+                colorsAdapter.getLastMovedToPosition() == adapterPos;
     }
 
 }

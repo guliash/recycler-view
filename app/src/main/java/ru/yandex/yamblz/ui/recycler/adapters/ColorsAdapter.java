@@ -21,7 +21,14 @@ public class ColorsAdapter extends RecyclerView.Adapter<ColorsAdapter.ContentHol
     private final Random rnd = new Random();
     private final List<Integer> colors = new ArrayList<>();
 
+    /**
+     * From which position was the last move made
+     */
     private int mMovedFrom = -1;
+
+    /**
+     * To which position wast the last move made
+     */
     private int mMovedTo = -1;
 
     @Override
@@ -54,10 +61,10 @@ public class ColorsAdapter extends RecyclerView.Adapter<ColorsAdapter.ContentHol
     }
 
     private Integer createColorForPosition(int position) {
-        while(position > colors.size()) {
-            colors.add(-1);
-        }
-        if (position == colors.size()) {
+        //need this because if we call notifyItemRangeInserted then onBindViewHolder will be called
+        //not in a sequential order
+        //add items until size exceeds position
+        while(position >= colors.size()) {
             colors.add(randomColor());
         }
         return colors.get(position);
@@ -77,12 +84,20 @@ public class ColorsAdapter extends RecyclerView.Adapter<ColorsAdapter.ContentHol
         notifyItemRemoved(position);
     }
 
-    @Override
-    public void onItemsFinalMove(int from, int to) {
+    /**
+     * Returns the position from which was the last move made
+     * @return the position
+     */
+    public int getLastMovedFromPosition() {
+        return mMovedFrom;
     }
 
-    @Override
-    public void onItemsStartMove() {
+    /**
+     * Returns the position to which was the last move made
+     * @return the position
+     */
+    public int getLastMovedToPosition() {
+        return mMovedTo;
     }
 
     public static class ContentHolder extends RecyclerView.ViewHolder {
@@ -111,13 +126,5 @@ public class ColorsAdapter extends RecyclerView.Adapter<ColorsAdapter.ContentHol
         public String getText() {
             return ((TextView)itemView).getText().toString();
         }
-    }
-
-    public int getLastMovedFromPosition() {
-        return mMovedFrom;
-    }
-
-    public int getLastMovedToPosition() {
-        return mMovedTo;
     }
 }

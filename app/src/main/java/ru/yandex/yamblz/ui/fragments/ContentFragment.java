@@ -4,9 +4,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,9 @@ import ru.yandex.yamblz.ui.recycler.decorators.ColorsItemDecoration;
 
 public class ContentFragment extends BaseFragment {
 
+    private static final int DEFAULT_COLUMNS_COUNT = 3;
+    private static final String COLUMNS_EXTRA = "cols";
+
     @BindView(R.id.rv)
     RecyclerView rv;
 
@@ -35,6 +40,24 @@ public class ContentFragment extends BaseFragment {
     EditText columns;
 
     private ColorsItemDecoration mStrokeDecoration;
+
+    private int mCountOfColumns = 0;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(savedInstanceState != null) {
+            mCountOfColumns = savedInstanceState.getInt(COLUMNS_EXTRA);
+        } else {
+            mCountOfColumns = DEFAULT_COLUMNS_COUNT;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(COLUMNS_EXTRA, mCountOfColumns);
+    }
 
     @NonNull
     @Override
@@ -52,15 +75,21 @@ public class ContentFragment extends BaseFragment {
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(rv);
 
-        rv.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        rv.setLayoutManager(new GridLayoutManager(getContext(), mCountOfColumns));
         rv.setAdapter(colorsAdapter);
         rv.setItemAnimator(new ColorsItemAnimator());
         rv.setItemViewCacheSize(120);
-        rv.getRecycledViewPool().setMaxRecycledViews(0, 120);
+        rv.setHasFixedSize(true);
+
         mStrokeDecoration = new ColorsItemDecoration(10, Color.GRAY, Color.YELLOW);
-
         rv.addOnScrollListener(new ColorsScrollListener(rv));
+    }
 
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        columns.setText(Integer.toString(mCountOfColumns));
+        columns.setSelection(columns.getText().length());
     }
 
     @OnCheckedChanged(R.id.decorate)
@@ -68,6 +97,10 @@ public class ContentFragment extends BaseFragment {
         handleDecoration(decorate.isChecked());
     }
 
+    /**
+     * turns on/off decoration
+     * @param show {@code true} if show
+     */
     private void handleDecoration(boolean show) {
         if(show) {
             rv.addItemDecoration(mStrokeDecoration);
@@ -92,11 +125,20 @@ public class ContentFragment extends BaseFragment {
         }
     }
 
+    /**
+     * Shows warning that the number of columns should be natural
+     */
     private void showNaturalWarning() {
-        columns.setError(getString(R.string.natural_warning));
+        Snackbar.make(columns, R.string.natural_warning, Snackbar.LENGTH_SHORT).show();
     }
 
+    /**
+     * Changes number of columns (animating)
+     * @param newCount the new count
+     */
     private void updateColumns(int newCount) {
+        mCountOfColumns = newCount;
+
         GridLayoutManager layoutManager = (GridLayoutManager)rv.getLayoutManager();
 
         final int oldCount = layoutManager.getSpanCount();
@@ -106,6 +148,7 @@ public class ContentFragment extends BaseFragment {
 
         layoutManager.setSpanCount(newCount);
 
+        //notify adapter that the range of appeared items was inserted (just for animation)
         if(newCount <= oldCount) {
             final int diff = (oldCount - newCount) * numberAtColumn;
             rv.getAdapter().notifyItemRangeInserted(last - diff + 1, diff);

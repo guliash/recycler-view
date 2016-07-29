@@ -18,10 +18,19 @@ import java.util.Map;
 
 import ru.yandex.yamblz.ui.recycler.adapters.ColorsAdapter;
 
+/**
+ * Animates color changes
+ */
 public class ColorsItemAnimator extends DefaultItemAnimator {
 
+    /**
+     * Duration of the animation
+     */
     private static final long COLOR_DURATION = 1000;
 
+    /**
+     * Stores animators of holders
+     */
     private final Map<RecyclerView.ViewHolder, Animator> animatorsMap = new HashMap<>();
 
     @Override
@@ -52,7 +61,6 @@ public class ColorsItemAnimator extends DefaultItemAnimator {
     public boolean animateChange(@NonNull RecyclerView.ViewHolder oldHolder,
                                  @NonNull RecyclerView.ViewHolder newHolder,
                                  @NonNull ItemHolderInfo preInfo, @NonNull ItemHolderInfo postInfo) {
-        Log.e("TAG", "ANIMATE CHANGE");
 
         final ColorsAdapter.ContentHolder contentHolder = (ColorsAdapter.ContentHolder)oldHolder;
         final ColorInfo preColorInfo = (ColorInfo)preInfo;
@@ -60,11 +68,13 @@ public class ColorsItemAnimator extends DefaultItemAnimator {
 
         cancelAnimations(contentHolder);
 
+        //turns color from the source to target
         ObjectAnimator colorAnim = ObjectAnimator.ofInt(contentHolder.itemView,
                 "backgroundColor", preColorInfo.mColor, postColorInfo.mColor);
         colorAnim.setEvaluator(new ArgbEvaluator());
         colorAnim.setDuration(COLOR_DURATION);
 
+        //rotates the item
         ObjectAnimator firstRotateAnim = ObjectAnimator.ofFloat(contentHolder.itemView, View.ROTATION_Y,
                 0, 90);
         ObjectAnimator secondRotateAnim = ObjectAnimator.ofFloat(contentHolder.itemView, View.ROTATION_Y,
@@ -73,6 +83,7 @@ public class ColorsItemAnimator extends DefaultItemAnimator {
         firstRotateAnim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
+                //need this because onBindViewHolder is called previously and the new text is shown
                 contentHolder.setText(preColorInfo.mText);
             }
         });
@@ -80,12 +91,14 @@ public class ColorsItemAnimator extends DefaultItemAnimator {
         firstRotateAnim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
+                //set text to the new value when animation ended
                 contentHolder.setText(postColorInfo.mText);
             }
         });
 
         AnimatorSet rotateSet = new AnimatorSet();
         rotateSet.playSequentially(firstRotateAnim, secondRotateAnim);
+        //half of the total duration
         rotateSet.setDuration(COLOR_DURATION >> 1);
 
         AnimatorSet wholeAnimator = new AnimatorSet();
@@ -127,6 +140,9 @@ public class ColorsItemAnimator extends DefaultItemAnimator {
         }
     }
 
+    /**
+     * Stores a holder's snapshot
+     */
     private class ColorInfo extends ItemHolderInfo {
         private int mColor;
         private String mText;

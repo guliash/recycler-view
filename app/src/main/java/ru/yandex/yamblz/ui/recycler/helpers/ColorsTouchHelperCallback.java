@@ -17,9 +17,6 @@ public class ColorsTouchHelperCallback extends ItemTouchHelper.Callback {
     private final ArgbEvaluator mEvaluator;
     private final Paint mPaint;
 
-    private boolean mDragging;
-    private int mDraggedFrom, mDraggedTo;
-
     public ColorsTouchHelperCallback(ColorsTouchHelperAdapter adapter) {
         this.mAdapter = adapter;
         this.mEvaluator = new ArgbEvaluator();
@@ -34,30 +31,8 @@ public class ColorsTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-        mDraggedTo = target.getAdapterPosition();
         mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
         return true;
-    }
-
-    @Override
-    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-        super.onSelectedChanged(viewHolder, actionState);
-        if(actionState == ItemTouchHelper.ACTION_STATE_DRAG && !mDragging) {
-            mDragging = true;
-            mAdapter.onItemsStartMove();
-            mDraggedFrom = viewHolder.getAdapterPosition();
-            mDraggedTo = mDraggedFrom;
-        }
-        if(actionState == ItemTouchHelper.ACTION_STATE_IDLE && mDragging) {
-            mDragging = false;
-            notifyFinalMove();
-        }
-    }
-
-    private void notifyFinalMove() {
-        if(mDraggedFrom != mDraggedTo) {
-            mAdapter.onItemsFinalMove(mDraggedFrom, mDraggedTo);
-        }
     }
 
     @Override
@@ -76,7 +51,8 @@ public class ColorsTouchHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                            float dX, float dY, int actionState, boolean isCurrentlyActive) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         if(actionState != ItemTouchHelper.ACTION_STATE_SWIPE) {
             return;
