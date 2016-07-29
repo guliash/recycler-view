@@ -22,7 +22,7 @@ public class ColorsItemAnimator extends DefaultItemAnimator {
 
     private static final long COLOR_DURATION = 1000;
 
-    Map<RecyclerView.ViewHolder, Animator> animatorsMap = new HashMap<>();
+    private final Map<RecyclerView.ViewHolder, Animator> animatorsMap = new HashMap<>();
 
     @Override
     public boolean canReuseUpdatedViewHolder(RecyclerView.ViewHolder viewHolder) {
@@ -106,32 +106,8 @@ public class ColorsItemAnimator extends DefaultItemAnimator {
         return false;
     }
 
-    @Override
-    public boolean animateAdd(RecyclerView.ViewHolder holder) {
-        Log.e("TAG", "ANIMATE ADD");
-        return super.animateAdd(holder);
-    }
-
-    @Override
-    public boolean animateAppearance(@NonNull RecyclerView.ViewHolder viewHolder, @Nullable ItemHolderInfo preLayoutInfo, @NonNull ItemHolderInfo postLayoutInfo) {
-        Log.e("TAG", "ANIMATE APPEARANCE");
-        return super.animateAppearance(viewHolder, preLayoutInfo, postLayoutInfo);
-    }
-
-    @Override
-    public boolean animateMove(RecyclerView.ViewHolder holder, int fromX, int fromY, int toX, int toY) {
-        Log.e("TAG", "ANIMATE MOVE");
-        return super.animateMove(holder, fromX, fromY, toX, toY);
-    }
-
-    @Override
-    public boolean animateDisappearance(@NonNull RecyclerView.ViewHolder viewHolder, @NonNull ItemHolderInfo preLayoutInfo, @Nullable ItemHolderInfo postLayoutInfo) {
-        Log.e("TAG", "ANIMATE DISAPPEARANCE");
-        return super.animateDisappearance(viewHolder, preLayoutInfo, postLayoutInfo);
-    }
-
     private void cancelAnimations(RecyclerView.ViewHolder holder) {
-        Animator animator = animatorsMap.get(holder);
+        final Animator animator = animatorsMap.get(holder);
         if(animator != null) {
             animator.cancel();
         }

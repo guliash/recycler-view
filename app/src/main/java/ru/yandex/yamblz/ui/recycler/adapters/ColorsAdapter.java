@@ -42,7 +42,6 @@ public class ColorsAdapter extends RecyclerView.Adapter<ColorsAdapter.ContentHol
     @Override
     public void onBindViewHolder(ContentHolder holder, int position) {
         holder.bind(createColorForPosition(position));
-        //holder.itemView.animate().rotationXBy(360).setDuration(500).start();
     }
 
     @Override

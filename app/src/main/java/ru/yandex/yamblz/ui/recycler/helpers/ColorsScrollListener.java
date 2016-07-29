@@ -9,8 +9,8 @@ public class ColorsScrollListener extends RecyclerView.OnScrollListener {
     private static final int ROTATE_VALUE = 360;
 
     private int mFirstVisible, mLastVisible;
-    private RecyclerView mRecyclerView;
-    private GridLayoutManager mLayoutManager;
+    private final RecyclerView mRecyclerView;
+    private final GridLayoutManager mLayoutManager;
 
     public ColorsScrollListener(RecyclerView recyclerView) {
         mRecyclerView = recyclerView;
@@ -45,8 +45,6 @@ public class ColorsScrollListener extends RecyclerView.OnScrollListener {
     }
 
     private void rotate(RecyclerView.ViewHolder viewHolder) {
-        if(viewHolder != null) {
-            viewHolder.itemView.animate().rotationXBy(ROTATE_VALUE).setDuration(ROTATION_DURATION).start();
-        }
+        viewHolder.itemView.animate().rotationXBy(ROTATE_VALUE).setDuration(ROTATION_DURATION).start();
     }
 }

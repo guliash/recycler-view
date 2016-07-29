@@ -13,9 +13,10 @@ import ru.yandex.yamblz.ui.recycler.adapters.ColorsTouchHelperAdapter;
 
 public class ColorsTouchHelperCallback extends ItemTouchHelper.Callback {
 
-    private ColorsTouchHelperAdapter mAdapter;
-    private ArgbEvaluator mEvaluator;
-    private Paint mPaint;
+    private final ColorsTouchHelperAdapter mAdapter;
+    private final ArgbEvaluator mEvaluator;
+    private final Paint mPaint;
+
     private boolean mDragging;
     private int mDraggedFrom, mDraggedTo;
 
@@ -33,7 +34,6 @@ public class ColorsTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-        Log.e("ON MOVE" , viewHolder.getAdapterPosition() + " " + target.getAdapterPosition());
         mDraggedTo = target.getAdapterPosition();
         mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
         return true;
@@ -52,7 +52,6 @@ public class ColorsTouchHelperCallback extends ItemTouchHelper.Callback {
             mDragging = false;
             notifyFinalMove();
         }
-        Log.e("TAG", "ON SELECTED CHANGED " + actionState);
     }
 
     private void notifyFinalMove() {

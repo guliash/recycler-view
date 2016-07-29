@@ -14,9 +14,9 @@ public class ColorsItemDecoration extends RecyclerView.ItemDecoration {
     private Paint mPaint;
     private Path mPath;
 
-    private int mStrokeWidth, mHalfStrokeWidth;
-    private int mStrokeColor;
-    private int mHighlightStrokeColor;
+    private final int mStrokeWidth, mHalfStrokeWidth;
+    private final int mStrokeColor;
+    private final int mHighlightStrokeColor;
 
     public ColorsItemDecoration(int strokeWidth, int strokeColor, int highlightStrokeColor) {
         this.mStrokeWidth = strokeWidth;
@@ -48,8 +48,8 @@ public class ColorsItemDecoration extends RecyclerView.ItemDecoration {
     @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
         final int childCount = parent.getChildCount();
-        for(int i = 0; i < childCount; i++) {
-            final View child = parent.getChildAt(i);
+        for(int layoutPos = 0; layoutPos < childCount; layoutPos++) {
+            final View child = parent.getChildAt(layoutPos);
             final int adapterPos = parent.getChildAdapterPosition(child);
             if(isItemHighlighted(parent.getAdapter(), adapterPos)) {
                 drawStrokeForChild(c, child, mHighlightStrokeColor);
