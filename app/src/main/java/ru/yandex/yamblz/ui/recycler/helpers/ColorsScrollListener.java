@@ -65,7 +65,6 @@ public class ColorsScrollListener extends RecyclerView.OnScrollListener {
     private void setValues() {
         mFirstVisible = mLayoutManager.findFirstVisibleItemPosition();
         mLastVisible = mLayoutManager.findLastVisibleItemPosition();
-        Log.e("TAG", mFirstVisible + " " + mLastVisible);
     }
 
     /**

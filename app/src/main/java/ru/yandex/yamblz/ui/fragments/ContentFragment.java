@@ -160,23 +160,12 @@ public class ContentFragment extends BaseFragment {
      * @param newCount the new count
      */
     private void updateColumns(int newCount) {
-        mCountOfColumns = newCount;
-
         GridLayoutManager layoutManager = (GridLayoutManager)rv.getLayoutManager();
-
-        final int oldCount = layoutManager.getSpanCount();
-        final int last = layoutManager.findLastVisibleItemPosition();
         final int first = layoutManager.findFirstVisibleItemPosition();
-        final int numberAtColumn = (last - first + 1) / oldCount;
 
+        //TODO WTF???? HOW DOES IT WORK?
         layoutManager.setSpanCount(newCount);
-
-        //notify adapter that the range of appeared/disappeared items was inserted/removed (just for animation)
-        if(newCount <= oldCount) {
-            final int diff = (oldCount - newCount) * numberAtColumn;
-            rv.getAdapter().notifyItemRangeRemoved(last - diff + 1, diff);
-        } else {
-            rv.getAdapter().notifyItemRangeInserted(last + 1, (newCount - oldCount) * numberAtColumn);
-        }
+        rv.requestLayout();
+        rv.getAdapter().notifyItemRangeChanged(first, 0);
     }
 }
