@@ -2,6 +2,7 @@
     <string name="app_name">Yamblz</string>
     <string name="content">Hello</string>
     <string name="decoration">Decoration</string>
+    <string name="rotation">Rotation</string>
     <string name="decorate">Decorate</string>
     <string name="do_not_decorate">Do not decorate</string>
     <string name="columns">Columns</string>

@@ -3,6 +3,7 @@ package ru.yandex.yamblz.ui.recycler.helpers;
 import android.animation.ObjectAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -64,6 +65,7 @@ public class ColorsScrollListener extends RecyclerView.OnScrollListener {
     private void setValues() {
         mFirstVisible = mLayoutManager.findFirstVisibleItemPosition();
         mLastVisible = mLayoutManager.findLastVisibleItemPosition();
+        Log.e("TAG", mFirstVisible + " " + mLastVisible);
     }
 
     /**

@@ -36,10 +36,14 @@ public class ContentFragment extends BaseFragment {
     @BindView(R.id.decorate)
     Switch decorate;
 
+    @BindView(R.id.rotate)
+    Switch rotate;
+
     @BindView(R.id.columns)
     EditText columns;
 
     private ColorsItemDecoration mStrokeDecoration;
+    private ColorsScrollListener mScrollListener;
 
     private int mCountOfColumns = 0;
 
@@ -78,11 +82,13 @@ public class ContentFragment extends BaseFragment {
         rv.setLayoutManager(new GridLayoutManager(getContext(), mCountOfColumns));
         rv.setAdapter(colorsAdapter);
         rv.setItemAnimator(new ColorsItemAnimator());
+
+        //optimizations for big rows
         rv.setItemViewCacheSize(120);
         rv.setHasFixedSize(true);
 
         mStrokeDecoration = new ColorsItemDecoration(10, Color.GRAY, Color.YELLOW);
-        rv.addOnScrollListener(new ColorsScrollListener(rv));
+        mScrollListener = new ColorsScrollListener(rv);
     }
 
     @Override
@@ -97,6 +103,11 @@ public class ContentFragment extends BaseFragment {
         handleDecoration(decorate.isChecked());
     }
 
+    @OnCheckedChanged(R.id.rotate)
+    void onRotateChecked() {
+        handleRotation(rotate.isChecked());
+    }
+
     /**
      * turns on/off decoration
      * @param show {@code true} if show
@@ -106,6 +117,18 @@ public class ContentFragment extends BaseFragment {
             rv.addItemDecoration(mStrokeDecoration);
         } else {
             rv.removeItemDecoration(mStrokeDecoration);
+        }
+    }
+
+    /**
+     * Turns on/off rotation animation
+     * @param rotate {@code true} if turn on
+     */
+    private void handleRotation(boolean rotate) {
+        if(rotate) {
+            rv.addOnScrollListener(mScrollListener);
+        } else {
+            rv.removeOnScrollListener(mScrollListener);
         }
     }
 
@@ -148,10 +171,10 @@ public class ContentFragment extends BaseFragment {
 
         layoutManager.setSpanCount(newCount);
 
-        //notify adapter that the range of appeared items was inserted (just for animation)
+        //notify adapter that the range of appeared/disappeared items was inserted/removed (just for animation)
         if(newCount <= oldCount) {
             final int diff = (oldCount - newCount) * numberAtColumn;
-            rv.getAdapter().notifyItemRangeInserted(last - diff + 1, diff);
+            rv.getAdapter().notifyItemRangeRemoved(last - diff + 1, diff);
         } else {
             rv.getAdapter().notifyItemRangeInserted(last + 1, (newCount - oldCount) * numberAtColumn);
         }
