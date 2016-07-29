@@ -1,4 +1,4 @@
-package ru.yandex.yamblz.ui.adapters;
+package ru.yandex.yamblz.ui.recycler.animators;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -15,6 +15,8 @@ import android.view.View;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ru.yandex.yamblz.ui.recycler.adapters.ColorsAdapter;
 
 public class ColorsItemAnimator extends DefaultItemAnimator {
 

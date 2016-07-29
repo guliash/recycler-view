@@ -1,4 +1,4 @@
-package ru.yandex.yamblz.ui.adapters;
+package ru.yandex.yamblz.ui.recycler.helpers;
 
 import android.animation.ArgbEvaluator;
 import android.graphics.Canvas;
@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
+
+import ru.yandex.yamblz.ui.recycler.adapters.ColorsTouchHelperAdapter;
 
 public class ColorsTouchHelperCallback extends ItemTouchHelper.Callback {
 

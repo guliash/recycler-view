@@ -1,4 +1,4 @@
-package ru.yandex.yamblz.ui.adapters;
+package ru.yandex.yamblz.ui.recycler.adapters;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -86,7 +86,7 @@ public class ColorsAdapter extends RecyclerView.Adapter<ColorsAdapter.ContentHol
     public void onItemsStartMove() {
     }
 
-    static class ContentHolder extends RecyclerView.ViewHolder {
+    public static class ContentHolder extends RecyclerView.ViewHolder {
 
         ContentHolder(View itemView) {
             super(itemView);

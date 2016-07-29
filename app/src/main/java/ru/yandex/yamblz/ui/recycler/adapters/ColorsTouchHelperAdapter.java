@@ -1,4 +1,4 @@
-package ru.yandex.yamblz.ui.adapters;
+package ru.yandex.yamblz.ui.recycler.adapters;
 
 public interface ColorsTouchHelperAdapter {
 

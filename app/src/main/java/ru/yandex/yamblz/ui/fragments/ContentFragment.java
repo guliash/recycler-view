@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +17,11 @@ import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import ru.yandex.yamblz.R;
-import ru.yandex.yamblz.ui.adapters.ColorsAdapter;
-import ru.yandex.yamblz.ui.adapters.ColorsItemAnimator;
-import ru.yandex.yamblz.ui.adapters.ColorsScrollListener;
-import ru.yandex.yamblz.ui.adapters.ColorsTouchHelperCallback;
-import ru.yandex.yamblz.ui.adapters.ColorsItemDecoration;
+import ru.yandex.yamblz.ui.recycler.adapters.ColorsAdapter;
+import ru.yandex.yamblz.ui.recycler.animators.ColorsItemAnimator;
+import ru.yandex.yamblz.ui.recycler.helpers.ColorsScrollListener;
+import ru.yandex.yamblz.ui.recycler.helpers.ColorsTouchHelperCallback;
+import ru.yandex.yamblz.ui.recycler.decorators.ColorsItemDecoration;
 
 public class ContentFragment extends BaseFragment {
 

@@ -1,8 +1,7 @@
-package ru.yandex.yamblz.ui.adapters;
+package ru.yandex.yamblz.ui.recycler.helpers;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 public class ColorsScrollListener extends RecyclerView.OnScrollListener {
 
@@ -21,9 +20,8 @@ public class ColorsScrollListener extends RecyclerView.OnScrollListener {
 
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        final GridLayoutManager gridLayoutManager = (GridLayoutManager)recyclerView.getLayoutManager();
-        final int firstVisible = gridLayoutManager.findFirstVisibleItemPosition();
-        final int lastVisible = gridLayoutManager.findLastVisibleItemPosition();
+        final int firstVisible = mLayoutManager.findFirstVisibleItemPosition();
+        final int lastVisible = mLayoutManager.findLastVisibleItemPosition();
         final int spanCount = mLayoutManager.getSpanCount();
         if(dy < 0) {
             if(mFirstVisible != firstVisible) {
