@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
@@ -19,10 +18,11 @@ import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import ru.yandex.yamblz.R;
-import ru.yandex.yamblz.ui.adapters.ContentAdapter;
-import ru.yandex.yamblz.ui.adapters.CustomItemAnimator;
-import ru.yandex.yamblz.ui.adapters.ItemTouchHelperCallback;
-import ru.yandex.yamblz.ui.adapters.StrokeItemDecoration;
+import ru.yandex.yamblz.ui.adapters.ColorsAdapter;
+import ru.yandex.yamblz.ui.adapters.ColorsItemAnimator;
+import ru.yandex.yamblz.ui.adapters.ColorsScrollListener;
+import ru.yandex.yamblz.ui.adapters.ColorsTouchHelperCallback;
+import ru.yandex.yamblz.ui.adapters.ColorsItemDecoration;
 
 public class ContentFragment extends BaseFragment {
 
@@ -35,7 +35,7 @@ public class ContentFragment extends BaseFragment {
     @BindView(R.id.columns)
     EditText columns;
 
-    private StrokeItemDecoration mStrokeDecoration;
+    private ColorsItemDecoration mStrokeDecoration;
 
     @NonNull
     @Override
@@ -47,18 +47,20 @@ public class ContentFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ContentAdapter contentAdapter = new ContentAdapter();
+        ColorsAdapter colorsAdapter = new ColorsAdapter();
 
-        ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(contentAdapter);
+        ItemTouchHelper.Callback callback = new ColorsTouchHelperCallback(colorsAdapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(rv);
 
         rv.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        rv.setAdapter(contentAdapter);
-        rv.setItemAnimator(new CustomItemAnimator());
+        rv.setAdapter(colorsAdapter);
+        rv.setItemAnimator(new ColorsItemAnimator());
         rv.setItemViewCacheSize(120);
         rv.getRecycledViewPool().setMaxRecycledViews(0, 120);
-        mStrokeDecoration = new StrokeItemDecoration(10, Color.GRAY, Color.YELLOW);
+        mStrokeDecoration = new ColorsItemDecoration(10, Color.GRAY, Color.YELLOW);
+
+        rv.addOnScrollListener(new ColorsScrollListener(rv));
 
     }
 
@@ -107,9 +109,9 @@ public class ContentFragment extends BaseFragment {
 
         if(newCount <= oldCount) {
             final int diff = (oldCount - newCount) * numberAtColumn;
-            rv.getAdapter().notifyItemRangeChanged(last - diff + 1, diff);
+            rv.getAdapter().notifyItemRangeInserted(last - diff + 1, diff);
         } else {
-            rv.getAdapter().notifyItemRangeChanged(last + 1, (newCount - oldCount) * numberAtColumn);
+            rv.getAdapter().notifyItemRangeInserted(last + 1, (newCount - oldCount) * numberAtColumn);
         }
     }
 }

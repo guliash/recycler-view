@@ -1,6 +1,6 @@
 package ru.yandex.yamblz.ui.adapters;
 
-public interface ItemTouchHelperAdapter {
+public interface ColorsTouchHelperAdapter {
 
     void onItemMove(int from, int to);
 

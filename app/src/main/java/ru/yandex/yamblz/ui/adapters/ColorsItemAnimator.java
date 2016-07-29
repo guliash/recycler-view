@@ -6,17 +6,17 @@ import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomItemAnimator extends DefaultItemAnimator {
+public class ColorsItemAnimator extends DefaultItemAnimator {
 
     private static final long COLOR_DURATION = 1000;
 
@@ -51,9 +51,12 @@ public class CustomItemAnimator extends DefaultItemAnimator {
                                  @NonNull RecyclerView.ViewHolder newHolder,
                                  @NonNull ItemHolderInfo preInfo, @NonNull ItemHolderInfo postInfo) {
         Log.e("TAG", "ANIMATE CHANGE");
-        final ContentAdapter.ContentHolder contentHolder = (ContentAdapter.ContentHolder)oldHolder;
+
+        final ColorsAdapter.ContentHolder contentHolder = (ColorsAdapter.ContentHolder)oldHolder;
         final ColorInfo preColorInfo = (ColorInfo)preInfo;
         final ColorInfo postColorInfo = (ColorInfo)postInfo;
+
+        cancelAnimations(contentHolder);
 
         ObjectAnimator colorAnim = ObjectAnimator.ofInt(contentHolder.itemView,
                 "backgroundColor", preColorInfo.mColor, postColorInfo.mColor);
@@ -94,23 +97,56 @@ public class CustomItemAnimator extends DefaultItemAnimator {
             }
         });
 
-        if(animatorsMap.containsKey(contentHolder)) {
-            animatorsMap.get(contentHolder).cancel();
-        }
-
         animatorsMap.put(contentHolder, wholeAnimator);
 
         wholeAnimator.start();
 
-
-
-        return super.animateChange(oldHolder, newHolder, preInfo, postInfo);
+        return false;
     }
 
     @Override
     public boolean animateAdd(RecyclerView.ViewHolder holder) {
-        Log.e("TAG", "ANIMATE APPEARANCE " + holder.getAdapterPosition());
+        Log.e("TAG", "ANIMATE ADD");
         return super.animateAdd(holder);
+    }
+
+    @Override
+    public boolean animateAppearance(@NonNull RecyclerView.ViewHolder viewHolder, @Nullable ItemHolderInfo preLayoutInfo, @NonNull ItemHolderInfo postLayoutInfo) {
+        Log.e("TAG", "ANIMATE APPEARANCE");
+        return super.animateAppearance(viewHolder, preLayoutInfo, postLayoutInfo);
+    }
+
+    @Override
+    public boolean animateMove(RecyclerView.ViewHolder holder, int fromX, int fromY, int toX, int toY) {
+        Log.e("TAG", "ANIMATE MOVE");
+        return super.animateMove(holder, fromX, fromY, toX, toY);
+    }
+
+    @Override
+    public boolean animateDisappearance(@NonNull RecyclerView.ViewHolder viewHolder, @NonNull ItemHolderInfo preLayoutInfo, @Nullable ItemHolderInfo postLayoutInfo) {
+        Log.e("TAG", "ANIMATE DISAPPEARANCE");
+        return super.animateDisappearance(viewHolder, preLayoutInfo, postLayoutInfo);
+    }
+
+    private void cancelAnimations(RecyclerView.ViewHolder holder) {
+        Animator animator = animatorsMap.get(holder);
+        if(animator != null) {
+            animator.cancel();
+        }
+    }
+
+    @Override
+    public void endAnimation(RecyclerView.ViewHolder item) {
+        super.endAnimation(item);
+        cancelAnimations(item);
+    }
+
+    @Override
+    public void endAnimations() {
+        super.endAnimations();
+        for(Animator animator : animatorsMap.values()) {
+            animator.cancel();
+        }
     }
 
     private class ColorInfo extends ItemHolderInfo {
@@ -119,8 +155,8 @@ public class CustomItemAnimator extends DefaultItemAnimator {
 
         @Override
         public ItemHolderInfo setFrom(RecyclerView.ViewHolder holder) {
-            if(holder instanceof ContentAdapter.ContentHolder) {
-                ContentAdapter.ContentHolder contentHolder = (ContentAdapter.ContentHolder)holder;
+            if(holder instanceof ColorsAdapter.ContentHolder) {
+                ColorsAdapter.ContentHolder contentHolder = (ColorsAdapter.ContentHolder)holder;
                 mColor = contentHolder.getBackgroundColor();
                 mText = contentHolder.getText();
             }

@@ -9,15 +9,15 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 
-public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
+public class ColorsTouchHelperCallback extends ItemTouchHelper.Callback {
 
-    private ItemTouchHelperAdapter mAdapter;
+    private ColorsTouchHelperAdapter mAdapter;
     private ArgbEvaluator mEvaluator;
     private Paint mPaint;
     private boolean mDragging;
     private int mDraggedFrom, mDraggedTo;
 
-    public ItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
+    public ColorsTouchHelperCallback(ColorsTouchHelperAdapter adapter) {
         this.mAdapter = adapter;
         this.mEvaluator = new ArgbEvaluator();
         this.mPaint = new Paint();

@@ -4,12 +4,10 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
-public class StrokeItemDecoration extends RecyclerView.ItemDecoration {
+public class ColorsItemDecoration extends RecyclerView.ItemDecoration {
 
     private Paint mPaint;
     private Path mPath;
@@ -18,7 +16,7 @@ public class StrokeItemDecoration extends RecyclerView.ItemDecoration {
     private int mStrokeColor;
     private int mHighlightStrokeColor;
 
-    public StrokeItemDecoration(int strokeWidth, int strokeColor, int highlightStrokeColor) {
+    public ColorsItemDecoration(int strokeWidth, int strokeColor, int highlightStrokeColor) {
         this.mStrokeWidth = strokeWidth;
         this.mHalfStrokeWidth = mStrokeWidth / 2;
         this.mStrokeColor = strokeColor;
@@ -86,8 +84,8 @@ public class StrokeItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     private boolean isItemHighlighted(RecyclerView.Adapter adapter, int adapterPos) {
-        return ((ContentAdapter)adapter).getLastMovedFromPosition() == adapterPos ||
-                ((ContentAdapter)adapter).getLastMovedToPosition() == adapterPos;
+        return ((ColorsAdapter)adapter).getLastMovedFromPosition() == adapterPos ||
+                ((ColorsAdapter)adapter).getLastMovedToPosition() == adapterPos;
     }
 
 }

@@ -1,19 +1,12 @@
 package ru.yandex.yamblz.ui.adapters;
 
-import android.animation.Animator;
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,8 +15,8 @@ import java.util.Random;
 
 import ru.yandex.yamblz.R;
 
-public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder>
-        implements ItemTouchHelperAdapter {
+public class ColorsAdapter extends RecyclerView.Adapter<ColorsAdapter.ContentHolder>
+        implements ColorsTouchHelperAdapter {
 
     private final Random rnd = new Random();
     private final List<Integer> colors = new ArrayList<>();
@@ -49,7 +42,7 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
     @Override
     public void onBindViewHolder(ContentHolder holder, int position) {
         holder.bind(createColorForPosition(position));
-        holder.itemView.animate().rotationXBy(360).setDuration(500).start();
+        //holder.itemView.animate().rotationXBy(360).setDuration(500).start();
     }
 
     @Override
@@ -62,7 +55,10 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
     }
 
     private Integer createColorForPosition(int position) {
-        if (position >= colors.size()) {
+        while(position > colors.size()) {
+            colors.add(-1);
+        }
+        if (position == colors.size()) {
             colors.add(randomColor());
         }
         return colors.get(position);
