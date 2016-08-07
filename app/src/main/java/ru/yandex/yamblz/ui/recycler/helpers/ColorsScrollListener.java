@@ -1,10 +1,15 @@
 package ru.yandex.yamblz.ui.recycler.helpers;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Handles scrolling animation
@@ -26,6 +31,11 @@ public class ColorsScrollListener extends RecyclerView.OnScrollListener {
 
     private final RecyclerView mRecyclerView;
     private final GridLayoutManager mLayoutManager;
+
+    /**
+     * Stores animators of holders
+     */
+    private final Map<RecyclerView.ViewHolder, Animator> mAnimatorsMap = new HashMap<>();
 
     public ColorsScrollListener(RecyclerView recyclerView) {
         mRecyclerView = recyclerView;
@@ -72,7 +82,23 @@ public class ColorsScrollListener extends RecyclerView.OnScrollListener {
      * @param viewHolder the holder
      */
     private void rotate(RecyclerView.ViewHolder viewHolder) {
-        ObjectAnimator.ofFloat(viewHolder.itemView, View.ROTATION_X,
-                0, ROTATE_VALUE).setDuration(ROTATION_DURATION).start();
+        Animator animator = ObjectAnimator.ofFloat(viewHolder.itemView, View.ROTATION_X,
+                0, ROTATE_VALUE).setDuration(ROTATION_DURATION);
+
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mAnimatorsMap.remove(viewHolder);
+            }
+        });
+
+        if(mAnimatorsMap.containsKey(viewHolder)) {
+            Animator cachedAnimator = mAnimatorsMap.get(viewHolder);
+            cachedAnimator.cancel();
+        }
+
+        mAnimatorsMap.put(viewHolder, animator);
+        animator.start();
+
     }
 }
