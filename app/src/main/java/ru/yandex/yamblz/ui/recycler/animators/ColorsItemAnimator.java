@@ -99,12 +99,16 @@ public class ColorsItemAnimator extends DefaultItemAnimator {
         AnimatorSet rotateSet = new AnimatorSet();
         rotateSet.playSequentially(firstRotateAnim, secondRotateAnim);
         //half of the total duration
-        rotateSet.setDuration(COLOR_DURATION >> 1);
+        rotateSet.setDuration(COLOR_DURATION / 2);
 
         AnimatorSet wholeAnimator = new AnimatorSet();
         wholeAnimator.playTogether(rotateSet, colorAnim);
-
         wholeAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                dispatchAnimationStarted(contentHolder);
+            }
+
             @Override
             public void onAnimationEnd(Animator animation) {
                 animatorsMap.remove(contentHolder);

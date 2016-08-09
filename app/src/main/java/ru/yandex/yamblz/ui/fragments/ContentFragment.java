@@ -86,6 +86,7 @@ public class ContentFragment extends BaseFragment {
         //optimizations for big rows
         rv.setItemViewCacheSize(120);
         rv.setHasFixedSize(true);
+        rv.getRecycledViewPool().setMaxRecycledViews(0, 120);
 
         mStrokeDecoration = new ColorsItemDecoration(10, Color.GRAY, Color.YELLOW);
         mScrollListener = new ColorsScrollListener(rv);

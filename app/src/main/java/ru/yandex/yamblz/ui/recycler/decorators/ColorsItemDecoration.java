@@ -72,25 +72,16 @@ public class ColorsItemDecoration extends RecyclerView.ItemDecoration {
      * @param strokeColor stroke color
      */
     private void drawStrokeForChild(Canvas canvas, View child, int strokeColor) {
+
         final float top = child.getTop();
         final float left = child.getLeft();
         final float width = child.getWidth();
         final float height = child.getHeight();
 
         mPaint.setColor(strokeColor);
-        mPath.reset();
 
-        mPath.moveTo(left - mStrokeWidth, top - mHalfStrokeWidth);
-        mPath.lineTo(left + width, top - mHalfStrokeWidth);
-        mPath.moveTo(left + width + mHalfStrokeWidth, top - mStrokeWidth);
-        mPath.lineTo(left + width + mHalfStrokeWidth, top + height);
-        mPath.moveTo(left + width + mStrokeWidth, top + height + mHalfStrokeWidth);
-        mPath.lineTo(left, top + height + mHalfStrokeWidth);
-        mPath.moveTo(left - mHalfStrokeWidth, top + height + mStrokeWidth);
-        mPath.lineTo(left - mHalfStrokeWidth, top);
-        mPath.close();
-
-        canvas.drawPath(mPath, mPaint);
+        canvas.drawRect(left - mHalfStrokeWidth, top - mHalfStrokeWidth, left + width + mHalfStrokeWidth,
+                top + height + mHalfStrokeWidth, mPaint);
     }
 
     /**
