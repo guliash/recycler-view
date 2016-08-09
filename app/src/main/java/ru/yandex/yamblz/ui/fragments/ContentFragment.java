@@ -24,6 +24,7 @@ import ru.yandex.yamblz.ui.recycler.animators.ColorsItemAnimator;
 import ru.yandex.yamblz.ui.recycler.helpers.ColorsScrollListener;
 import ru.yandex.yamblz.ui.recycler.helpers.ColorsTouchHelperCallback;
 import ru.yandex.yamblz.ui.recycler.decorators.ColorsItemDecoration;
+import ru.yandex.yamblz.ui.recycler.manager.PreCachingGridLayoutManager;
 
 public class ContentFragment extends BaseFragment {
 
@@ -79,7 +80,7 @@ public class ContentFragment extends BaseFragment {
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(rv);
 
-        rv.setLayoutManager(new GridLayoutManager(getContext(), mCountOfColumns));
+        rv.setLayoutManager(new PreCachingGridLayoutManager(getContext(), mCountOfColumns, 500));
         rv.setAdapter(colorsAdapter);
         rv.setItemAnimator(new ColorsItemAnimator());
 
