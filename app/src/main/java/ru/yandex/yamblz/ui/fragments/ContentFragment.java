@@ -30,6 +30,7 @@ public class ContentFragment extends BaseFragment {
 
     private static final int DEFAULT_COLUMNS_COUNT = 3;
     private static final String COLUMNS_EXTRA = "cols";
+    private static final int DEFAULT_EXTRA_LAYOUT_SPACE = 1000;
 
     @BindView(R.id.rv)
     RecyclerView rv;
@@ -66,7 +67,8 @@ public class ContentFragment extends BaseFragment {
 
     @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_content, container, false);
     }
 
@@ -80,7 +82,8 @@ public class ContentFragment extends BaseFragment {
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(rv);
 
-        rv.setLayoutManager(new PreCachingGridLayoutManager(getContext(), mCountOfColumns, 500));
+        rv.setLayoutManager(new PreCachingGridLayoutManager(getContext(), mCountOfColumns,
+                DEFAULT_EXTRA_LAYOUT_SPACE));
         rv.setAdapter(colorsAdapter);
         rv.setItemAnimator(new ColorsItemAnimator());
 
